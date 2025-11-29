@@ -1,0 +1,31 @@
+{
+  "name": "vitest-vs-rstest-benchmark",
+  "version": "1.0.0",
+  "description": "Benchmark react component testing between Vitest and Rspack's RSTest runner.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test:vitest": "vitest run",
+    "test:rstest": "rstest run -c rstest.config.ts",
+    "bench": "node scripts/benchmark.js",
+    "bench:matrix": "node scripts/matrix-benchmark.js",
+    "test": "npm run test:vitest && npm run test:rstest"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.2.0",
+    "@testing-library/user-event": "14.5.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.10",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "5.1.1",
+    "@rstest/core": "^0.6.8",
+    "jsdom": "25.0.1",
+    "typescript": "5.6.3",
+    "vite": "5.4.9",
+    "vitest": "2.1.4"
+  }
+}
