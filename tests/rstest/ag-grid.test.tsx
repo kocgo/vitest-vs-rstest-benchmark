@@ -1,3 +1,4 @@
+import { act } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SalesGrid } from '../../src/components/SalesGrid';
@@ -34,7 +35,9 @@ describe('SalesGrid (rstest)', () => {
 
     expect(api.getDisplayedRowCount()).toBe(rows.length);
 
-    api.setGridOption('quickFilterText', 'APAC');
+    await act(async () => {
+      api.setGridOption('quickFilterText', 'APAC');
+    });
     await waitFor(() => expect(api.getDisplayedRowCount()).toBe(50));
     expect(screen.queryByRole('gridcell', { name: /AMER/ })).toBeNull();
   });
@@ -50,7 +53,9 @@ describe('SalesGrid (rstest)', () => {
 
     expect(api.getDisplayedRowCount()).toBe(count);
 
-      api.setGridOption('quickFilterText', 'APAC');
+      await act(async () => {
+        api.setGridOption('quickFilterText', 'APAC');
+      });
       await waitFor(() => expect(api.getDisplayedRowCount()).toBe(expectedMatches));
     });
   });
@@ -60,7 +65,9 @@ describe('SalesGrid (rstest)', () => {
     const selections: Array<ReturnType<GridApi['getSelectedRows']>> = [];
     const { api, container } = await renderGrid({ onSelectionChange: (rows) => selections.push(rows) });
 
-    api.applyColumnState({ state: [{ colId: 'revenue', sort: 'desc' }] });
+    await act(async () => {
+      api.applyColumnState({ state: [{ colId: 'revenue', sort: 'desc' }] });
+    });
 
     await waitFor(() => expect(api.getDisplayedRowAtIndex(0)?.data?.revenue).toBe(13425));
 

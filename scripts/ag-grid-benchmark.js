@@ -19,13 +19,12 @@ const suites = [
   },
   {
     name: 'rstest ag-grid',
-    command: 'npm',
+    command: 'npx',
     args: [
+      'rstest',
       'run',
-      'test:rstest',
-      '--',
-      '--testNamePattern',
-      'SalesGrid',
+      '-c',
+      'rstest.ag-grid.config.ts',
       '--testEnvironment',
       'jsdom',
       '--globals',
