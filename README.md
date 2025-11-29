@@ -7,6 +7,7 @@ This repository provides a tiny React component surface area and two parallel te
 - Vitest setup in `vitest.config.ts` with tests in `tests/vitest`.
 - RSTest setup in `rstest.config.ts` with tests in `tests/rstest`.
 - A `scripts/benchmark.js` helper that runs both suites sequentially and prints their wall-clock timings.
+- A TypeScript benchmark catalog in `benchmarks/` that enumerates every combination of runner, environment, subject, and test count.
 
 ## Getting started
 1. Install dependencies (Node 18+ recommended):
@@ -36,34 +37,70 @@ This repository provides a tiny React component surface area and two parallel te
 - `vitest.config.ts`, `vitest.setup.ts`: Vitest configuration.
 - `rstest.config.ts`, `rstest.setup.ts`: RSTest configuration tuned for React Testing Library.
 - `scripts/benchmark.js`: sequential runner that reports elapsed time for each suite.
+- `benchmarks/`: matrix of benchmark case definitions and a central `benchmarkCases` export.
+
+## Benchmark case catalog
+Benchmark definitions live in `benchmarks/cases`, one file per combination. Each file exports a `BenchmarkCase` that captures the runner, DOM environment, subject, test count, and a default concurrency of 5. `benchmarks/index.ts` aggregates the cases for any tooling that wants to load them programmatically.
 
 ## Latest benchmark results
+All benchmark results now live in this README. Populate the runtime column as new measurements become available.
 
-Synthetic suite (`npm run bench:matrix`):
+| Framework | Environment | Test subject | Test count | Concurrency | Runtime (s) |
+| --- | --- | --- | --- | --- | --- |
+| vitest | jsdom | pure function | 100 | 5 | 6.58 |
+| vitest | jsdom | pure function | 1000 | 5 | 8.19 |
+| vitest | jsdom | pure function | 10000 | 5 | 56.36 |
+| vitest | jsdom | react component | 100 | 5 | — |
+| vitest | jsdom | react component | 1000 | 5 | — |
+| vitest | jsdom | react component | 10000 | 5 | — |
+| vitest | jsdom | ag-grid | 100 | 5 | — |
+| vitest | jsdom | ag-grid | 1000 | 5 | — |
+| vitest | jsdom | ag-grid | 10000 | 5 | — |
+| vitest | happydom | pure function | 100 | 5 | — |
+| vitest | happydom | pure function | 1000 | 5 | — |
+| vitest | happydom | pure function | 10000 | 5 | — |
+| vitest | happydom | react component | 100 | 5 | — |
+| vitest | happydom | react component | 1000 | 5 | — |
+| vitest | happydom | react component | 10000 | 5 | — |
+| vitest | happydom | ag-grid | 100 | 5 | — |
+| vitest | happydom | ag-grid | 1000 | 5 | — |
+| vitest | happydom | ag-grid | 10000 | 5 | — |
+| vitest | node | pure function | 100 | 5 | 5.55 |
+| vitest | node | pure function | 1000 | 5 | 6.80 |
+| vitest | node | pure function | 10000 | 5 | 55.26 |
+| vitest | node | react component | 100 | 5 | — |
+| vitest | node | react component | 1000 | 5 | — |
+| vitest | node | react component | 10000 | 5 | — |
+| vitest | node | ag-grid | 100 | 5 | — |
+| vitest | node | ag-grid | 1000 | 5 | — |
+| vitest | node | ag-grid | 10000 | 5 | — |
+| rstest | jsdom | pure function | 100 | 5 | 6.02 |
+| rstest | jsdom | pure function | 1000 | 5 | 7.06 |
+| rstest | jsdom | pure function | 10000 | 5 | 13.96 |
+| rstest | jsdom | react component | 100 | 5 | — |
+| rstest | jsdom | react component | 1000 | 5 | — |
+| rstest | jsdom | react component | 10000 | 5 | — |
+| rstest | jsdom | ag-grid | 100 | 5 | — |
+| rstest | jsdom | ag-grid | 1000 | 5 | — |
+| rstest | jsdom | ag-grid | 10000 | 5 | — |
+| rstest | happydom | pure function | 100 | 5 | — |
+| rstest | happydom | pure function | 1000 | 5 | — |
+| rstest | happydom | pure function | 10000 | 5 | — |
+| rstest | happydom | react component | 100 | 5 | — |
+| rstest | happydom | react component | 1000 | 5 | — |
+| rstest | happydom | react component | 10000 | 5 | — |
+| rstest | happydom | ag-grid | 100 | 5 | — |
+| rstest | happydom | ag-grid | 1000 | 5 | — |
+| rstest | happydom | ag-grid | 10000 | 5 | — |
+| rstest | node | pure function | 100 | 5 | 3.55 |
+| rstest | node | pure function | 1000 | 5 | 4.39 |
+| rstest | node | pure function | 10000 | 5 | 11.64 |
+| rstest | node | react component | 100 | 5 | — |
+| rstest | node | react component | 1000 | 5 | — |
+| rstest | node | react component | 10000 | 5 | — |
+| rstest | node | ag-grid | 100 | 5 | — |
+| rstest | node | ag-grid | 1000 | 5 | — |
+| rstest | node | ag-grid | 10000 | 5 | — |
 
-| Runner | Environment | Test count | Total runtime (s) |
-| --- | --- | --- | --- |
-| Vitest | jsdom | 100 | 5.57 |
-| Vitest | jsdom | 1,000 | 6.10 |
-| Vitest | jsdom | 10,000 | 29.67 |
-| Vitest | node | 100 | 4.41 |
-| Vitest | node | 1,000 | 5.27 |
-| Vitest | node | 10,000 | 30.21 |
-| Rstest | jsdom | 100 | 4.59 |
-| Rstest | jsdom | 1,000 | 5.27 |
-| Rstest | jsdom | 10,000 | 10.34 |
-| Rstest | node | 100 | 2.53 |
-| Rstest | node | 1,000 | 3.30 |
-| Rstest | node | 10,000 | 8.94 |
+> The populated numbers come from the synthetic pure-function matrix runner. Happy DOM and the React component/ag-grid variants still need dedicated harnesses before they can be benchmarked.
 
-ag-Grid suite:
-
-- `npm run bench:ag-grid` (jsdom): Vitest **10.40s**, Rstest **10.35s**
-- `npm run bench:ag-grid-dom`: jsdom — Vitest **10.34s**, Rstest **9.91s**; happy-dom — Vitest **9.59s**, Rstest **9.19s**
-
-Count-focused ag-Grid run (`npm run bench:ag-grid-count`):
-
-| Runner | 100 tests (s) | 1,000 tests (s) | 10,000 tests (s) |
-| --- | --- | --- | --- |
-| Vitest | 7.85 | 8.30 | 11.12 |
-| Rstest | 12.33 | 12.88 | 17.44 |
