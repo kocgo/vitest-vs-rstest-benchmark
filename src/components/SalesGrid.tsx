@@ -18,9 +18,16 @@ export type SalesGridProps = {
   quickFilterText?: string;
   onSelectionChange?: (selected: SaleRecord[]) => void;
   onGridReady?: (api: GridApi<SaleRecord>) => void;
+  suppressRowVirtualisation?: boolean;
 };
 
-export function SalesGrid({ rows, quickFilterText = '', onSelectionChange, onGridReady }: SalesGridProps) {
+export function SalesGrid({
+  rows,
+  quickFilterText = '',
+  onSelectionChange,
+  onGridReady,
+  suppressRowVirtualisation = true
+}: SalesGridProps) {
   const columnDefs = useMemo<ColDef[]>(() => (
     [
       { field: 'id', headerName: 'ID', width: 80, pinned: 'left', filter: 'agNumberColumnFilter' },
@@ -56,7 +63,7 @@ export function SalesGrid({ rows, quickFilterText = '', onSelectionChange, onGri
         animateRows
         ensureDomOrder
         domLayout="autoHeight"
-        suppressRowVirtualisation
+        suppressRowVirtualisation={suppressRowVirtualisation}
         rowSelection="multiple"
         rowMultiSelectWithClick
         quickFilterText={quickFilterText}

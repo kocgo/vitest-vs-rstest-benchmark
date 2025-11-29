@@ -19,9 +19,9 @@ The synthetic benchmark script (`npm run bench:matrix`) generates temporary suit
 
 ## ag-Grid component suite
 
-Targeted runs against the ag-Grid-heavy SalesGrid component using `npm run bench:ag-grid` measured the following totals:
+The count-focused ag-Grid benchmark (`npm run bench:ag-grid-count`) spins up a single SalesGrid instance and runs 100, 1,000, and 10,000 lightweight assertions against it to compare runner overhead while keeping the component in play.
 
-| Runner | Tests executed | Total runtime (s) |
-| --- | --- | --- |
-| Vitest | `tests/vitest/ag-grid.test.tsx` | 5.21 |
-| Rstest | `tests/rstest/ag-grid.test.tsx` plus dependent fixtures | 8.18 |
+| Runner | 100 tests (s) | 1,000 tests (s) | 10,000 tests (s) |
+| --- | --- | --- | --- |
+| Vitest | 7.17 | 7.78 | 11.46 |
+| Rstest | 13.67 | 14.52 | 19.48 |

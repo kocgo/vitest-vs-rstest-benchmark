@@ -9,6 +9,7 @@
     "test:rstest": "rstest run -c rstest.config.ts",
     "bench": "node scripts/benchmark.js",
     "bench:ag-grid": "node scripts/ag-grid-benchmark.js",
+    "bench:ag-grid-count": "node scripts/ag-grid-count-benchmark.js",
     "bench:matrix": "node scripts/matrix-benchmark.js",
     "test": "npm run test:vitest && npm run test:rstest"
   },
