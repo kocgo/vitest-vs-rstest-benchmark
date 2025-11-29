@@ -14,19 +14,29 @@ This repository provides a tiny React component surface area and two parallel te
    ```bash
    npm install
    ```
-2. Run each suite individually:
+2. Verify both harnesses are healthy by running the suites individually:
    ```bash
    npm run test:vitest
    npm run test:rstest
    ```
-3. Or run both suites back-to-back to capture simple timing numbers:
+3. Capture a quick side-by-side timing for the existing specs:
    ```bash
    npm run bench
    ```
-4. Compare ag-grid performance across DOM environments:
+4. Reproduce the numbers in the results table (synthetic pure-function matrix):
    ```bash
-   npm run bench:ag-grid-dom
+   npm run bench:readme
    ```
+   This command shells out to the matrix benchmark runner, generates temporary suites for Vitest and RSTest across jsdom, Happy DOM, and Node, and prints the elapsed time for each combination.
+5. Explore additional presets:
+   - Compare ag-grid performance across DOM environments:
+     ```bash
+     npm run bench:ag-grid-dom
+     ```
+   - Sweep ag-grid test counts for the default jsdom setup:
+     ```bash
+     npm run bench:ag-grid-count
+     ```
 
 > Note: If you want more realistic scaling behavior, duplicate the test cases or introduce more complex components while keeping the harnesses consistent.
 
