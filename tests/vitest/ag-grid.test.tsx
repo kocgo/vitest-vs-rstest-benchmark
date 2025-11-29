@@ -3,19 +3,24 @@ import userEvent from '@testing-library/user-event';
 import { SalesGrid } from '../../src/components/SalesGrid';
 import { buildSalesRecords } from '../agGridFixtures';
 import type { GridApi } from 'ag-grid-community';
+import type { SaleRecord } from '../../src/components/SalesGrid';
 
 const rows = buildSalesRecords(200);
 
-async function renderGrid(props: Partial<React.ComponentProps<typeof SalesGrid>> = {}) {
+async function renderGrid(
+  props: Partial<React.ComponentProps<typeof SalesGrid>> & { rows?: SaleRecord[] } = {}
+) {
+  const { rows: overrideRows, suppressRowVirtualisation = false, ...rest } = props;
   let api: GridApi | null = null;
   const renderResult = render(
     <SalesGrid
-      rows={rows}
+      rows={overrideRows ?? rows}
       quickFilterText=""
+      suppressRowVirtualisation={suppressRowVirtualisation}
       onGridReady={(gridApi) => {
         api = gridApi;
       }}
-      {...props}
+      {...rest}
     />
   );
 
@@ -25,14 +30,29 @@ async function renderGrid(props: Partial<React.ComponentProps<typeof SalesGrid>>
 
 describe('SalesGrid (vitest)', () => {
   it('renders all rows and filters them with a quick filter', async () => {
-    const { rerender, api } = await renderGrid();
+    const { api } = await renderGrid();
 
     expect(api.getDisplayedRowCount()).toBe(rows.length);
 
-    rerender(<SalesGrid rows={rows} quickFilterText="EMEA" onGridReady={(gridApi) => {}} />);
-
+    api.setGridOption('quickFilterText', 'EMEA');
     await waitFor(() => expect(api.getDisplayedRowCount()).toBe(50));
     expect(screen.queryByRole('gridcell', { name: /AMER/ })).toBeNull();
+  });
+
+  describe.each([
+    { count: 100, expectedMatches: 25 },
+    { count: 1_000, expectedMatches: 250 },
+    { count: 10_000, expectedMatches: 2_500 }
+  ])('quick filter scales with $count rows', ({ count, expectedMatches }) => {
+    it('applies quick filter text across the dataset', async () => {
+    const sampleRows = buildSalesRecords(count);
+    const { api } = await renderGrid({ rows: sampleRows });
+
+    expect(api.getDisplayedRowCount()).toBe(count);
+
+      api.setGridOption('quickFilterText', 'APAC');
+      await waitFor(() => expect(api.getDisplayedRowCount()).toBe(expectedMatches));
+    });
   });
 
   it('supports sorting revenue and multi-row selection', async () => {
