@@ -16,3 +16,12 @@ The synthetic benchmark script (`npm run bench:matrix`) generates temporary suit
 | Rstest | node | 100 | 0.91 | 0.24 | 1.15 |
 | Rstest | node | 1,000 | 0.92 | 0.54 | 1.46 |
 | Rstest | node | 10,000 | 0.94 | 2.88 | 3.82 |
+
+## ag-Grid component suite
+
+Targeted runs against the ag-Grid-heavy SalesGrid component using `npm run bench:ag-grid` measured the following totals:
+
+| Runner | Tests executed | Total runtime (s) |
+| --- | --- | --- |
+| Vitest | `tests/vitest/ag-grid.test.tsx` | 5.21 |
+| Rstest | `tests/rstest/ag-grid.test.tsx` plus dependent fixtures | 8.18 |
