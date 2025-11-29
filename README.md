@@ -22,6 +22,10 @@ This repository provides a tiny React component surface area and two parallel te
    ```bash
    npm run bench
    ```
+4. Compare ag-grid performance across DOM environments:
+   ```bash
+   npm run bench:ag-grid-dom
+   ```
 
 > Note: If you want more realistic scaling behavior, duplicate the test cases or introduce more complex components while keeping the harnesses consistent.
 
