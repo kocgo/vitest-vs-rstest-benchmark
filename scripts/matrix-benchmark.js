@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 
 const testCounts = [100, 1000, 10000];
-const environments = ['jsdom', 'node'];
+const environments = ['jsdom', 'happy-dom', 'node'];
 
 const runners = [
   {
