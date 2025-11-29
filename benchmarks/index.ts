@@ -18,6 +18,7 @@ import vitest_happydom_react_component_10000 from './cases/vitest-happydom-react
 import vitest_happydom_ag_grid_100 from './cases/vitest-happydom-ag-grid-100';
 import vitest_happydom_ag_grid_1000 from './cases/vitest-happydom-ag-grid-1000';
 import vitest_happydom_ag_grid_10000 from './cases/vitest-happydom-ag-grid-10000';
+import vitest_happydom_ag_grid_100000 from './cases/vitest-happydom-ag-grid-100000';
 import vitest_node_pure_function_100 from './cases/vitest-node-pure-function-100';
 import vitest_node_pure_function_1000 from './cases/vitest-node-pure-function-1000';
 import vitest_node_pure_function_10000 from './cases/vitest-node-pure-function-10000';
@@ -45,6 +46,7 @@ import rstest_happydom_react_component_10000 from './cases/rstest-happydom-react
 import rstest_happydom_ag_grid_100 from './cases/rstest-happydom-ag-grid-100';
 import rstest_happydom_ag_grid_1000 from './cases/rstest-happydom-ag-grid-1000';
 import rstest_happydom_ag_grid_10000 from './cases/rstest-happydom-ag-grid-10000';
+import rstest_happydom_ag_grid_100000 from './cases/rstest-happydom-ag-grid-100000';
 import rstest_node_pure_function_100 from './cases/rstest-node-pure-function-100';
 import rstest_node_pure_function_1000 from './cases/rstest-node-pure-function-1000';
 import rstest_node_pure_function_10000 from './cases/rstest-node-pure-function-10000';
@@ -74,6 +76,7 @@ export const benchmarkCases: BenchmarkCase[] = [
   vitest_happydom_ag_grid_100,
   vitest_happydom_ag_grid_1000,
   vitest_happydom_ag_grid_10000,
+  vitest_happydom_ag_grid_100000,
   vitest_node_pure_function_100,
   vitest_node_pure_function_1000,
   vitest_node_pure_function_10000,
@@ -101,6 +104,7 @@ export const benchmarkCases: BenchmarkCase[] = [
   rstest_happydom_ag_grid_100,
   rstest_happydom_ag_grid_1000,
   rstest_happydom_ag_grid_10000,
+  rstest_happydom_ag_grid_100000,
   rstest_node_pure_function_100,
   rstest_node_pure_function_1000,
   rstest_node_pure_function_10000,

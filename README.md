@@ -66,6 +66,7 @@ All benchmark results now live in this README. Populate the runtime column as ne
 | vitest | happydom | ag-grid | 100 | 5 | — |
 | vitest | happydom | ag-grid | 1000 | 5 | — |
 | vitest | happydom | ag-grid | 10000 | 5 | — |
+| vitest | happydom | ag-grid | 100000 | 5 | 6.63 |
 | vitest | node | pure function | 100 | 5 | 5.55 |
 | vitest | node | pure function | 1000 | 5 | 6.80 |
 | vitest | node | pure function | 10000 | 5 | 55.26 |
@@ -94,6 +95,7 @@ All benchmark results now live in this README. Populate the runtime column as ne
 | rstest | happydom | ag-grid | 100 | 5 | — |
 | rstest | happydom | ag-grid | 1000 | 5 | — |
 | rstest | happydom | ag-grid | 10000 | 5 | — |
+| rstest | happydom | ag-grid | 100000 | 5 | 9.59 |
 | rstest | node | pure function | 100 | 5 | 3.55 |
 | rstest | node | pure function | 1000 | 5 | 4.39 |
 | rstest | node | pure function | 10000 | 5 | 11.64 |

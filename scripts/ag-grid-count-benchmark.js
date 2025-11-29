@@ -3,7 +3,21 @@ import { join, relative } from 'node:path';
 import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 
-const testCounts = [100, 1_000, 10_000, 100_000];
+const selectedCounts = process.env.AG_GRID_COUNTS
+  ? process.env.AG_GRID_COUNTS.split(',').map((value) => Number.parseInt(value, 10))
+  : undefined;
+
+const testCounts = selectedCounts?.filter((count) => Number.isFinite(count) && count > 0) ?? [
+  100,
+  1_000,
+  10_000,
+  100_000
+];
+
+const testEnvironment = process.env.AG_GRID_ENV ?? 'jsdom';
+const batchSize = Number.isFinite(Number(process.env.AG_GRID_BATCH_SIZE))
+  ? Math.max(1, Number.parseInt(process.env.AG_GRID_BATCH_SIZE, 10))
+  : 1;
 
 const runners = [
   {
@@ -47,10 +61,16 @@ describe('ag-grid synthetic load', () => {
     resetGrid?.();
   });
 
-  for (let i = 0; i < ${count}; i++) {
-    it('reads displayed rows ' + i, () => {
-      expect(gridApi.isDestroyed()).toBe(false);
-      expect(gridApi.getDisplayedRowCount()).toBe(rows.length);
+  const total = ${count};
+  const batchSize = ${batchSize};
+
+  for (let start = 0; start < total; start += batchSize) {
+    const end = Math.min(start + batchSize, total);
+    it('reads displayed rows ' + start + '-' + (end - 1), () => {
+      for (let i = start; i < end; i++) {
+        expect(gridApi.isDestroyed()).toBe(false);
+        expect(gridApi.getDisplayedRowCount()).toBe(rows.length);
+      }
     });
   }
 });
@@ -61,7 +81,7 @@ describe('ag-grid synthetic load', () => {
       '--config',
       'vitest.config.ts',
       '--environment',
-      'jsdom',
+      testEnvironment,
       '--reporter',
       'basic',
       '--silent',
@@ -115,10 +135,16 @@ describe('ag-grid synthetic load', () => {
     resetGrid?.();
   });
 
-  for (let i = 0; i < ${count}; i++) {
-    it('reads displayed rows ' + i, () => {
-      expect(gridApi.isDestroyed()).toBe(false);
-      expect(gridApi.getDisplayedRowCount()).toBe(rows.length);
+  const total = ${count};
+  const batchSize = ${batchSize};
+
+  for (let start = 0; start < total; start += batchSize) {
+    const end = Math.min(start + batchSize, total);
+    it('reads displayed rows ' + start + '-' + (end - 1), () => {
+      for (let i = start; i < end; i++) {
+        expect(gridApi.isDestroyed()).toBe(false);
+        expect(gridApi.getDisplayedRowCount()).toBe(rows.length);
+      }
     });
   }
 });
@@ -133,7 +159,7 @@ describe('ag-grid synthetic load', () => {
       '--include',
       file,
       '--testEnvironment',
-      'jsdom',
+      testEnvironment,
       '--globals',
       '--maxConcurrency',
       '4',
@@ -178,8 +204,8 @@ async function runBenchmarks() {
         const relativeFile = relative(process.cwd(), file);
         const args = runner.commandArgs(relativeFile);
         const duration = await runCommand('npx', args, process.cwd());
-        results.push({ runner: runner.name, count, durationMs: duration });
-        console.log(`\n${runner.name} | ${count} tests -> ${(duration / 1000).toFixed(2)}s`);
+        results.push({ runner: runner.name, environment: testEnvironment, count, durationMs: duration });
+        console.log(`\n${runner.name} | ${testEnvironment} | ${count} tests -> ${(duration / 1000).toFixed(2)}s`);
       }
     }
   } finally {
@@ -192,7 +218,7 @@ async function runBenchmarks() {
 function printSummary(results) {
   console.log('\nSummary (ms):');
   for (const row of results.sort((a, b) => a.count - b.count || a.runner.localeCompare(b.runner))) {
-    console.log(`${row.runner} | ${row.count} tests -> ${row.durationMs.toFixed(1)}ms`);
+    console.log(`${row.runner} | ${row.environment} | ${row.count} tests -> ${row.durationMs.toFixed(1)}ms`);
   }
 }
 
