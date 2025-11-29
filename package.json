@@ -8,6 +8,7 @@
     "test:vitest": "vitest run",
     "test:rstest": "rstest run -c rstest.config.ts",
     "bench": "node scripts/benchmark.js",
+    "bench:readme": "npm run bench:matrix",
     "bench:ag-grid": "node scripts/ag-grid-benchmark.js",
     "bench:ag-grid-dom": "node scripts/ag-grid-dom-benchmark.js",
     "bench:ag-grid-count": "node scripts/ag-grid-count-benchmark.js",
