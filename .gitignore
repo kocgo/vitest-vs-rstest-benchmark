@@ -1,0 +1,5 @@
+node_modules
+bench-output.txt
+.tmp*
+tmp-bench-*
+.DS_Store
