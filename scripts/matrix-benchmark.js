@@ -19,7 +19,21 @@ describe('synthetic vitest suite', () => {
   }
 });
 `,
-    commandArgs: (env, file) => ['vitest', 'run', '--config', 'vitest.config.ts', '--environment', env, file]
+    commandArgs: (env, file) => [
+      'vitest',
+      'run',
+      '--config',
+      'vitest.config.ts',
+      '--environment',
+      env,
+      '--minWorkers',
+      '4',
+      '--maxWorkers',
+      '4',
+      '--maxConcurrency',
+      '4',
+      file
+    ]
   },
   {
     name: 'rstest',
@@ -33,7 +47,19 @@ describe('synthetic rstest suite', () => {
   }
 });
 `,
-    commandArgs: (env, file) => ['rstest', 'run', '-c', 'rstest.config.ts', '--include', file, '--testEnvironment', env, '--globals']
+    commandArgs: (env, file) => [
+      'rstest',
+      'run',
+      '-c',
+      'rstest.config.ts',
+      '--include',
+      file,
+      '--testEnvironment',
+      env,
+      '--globals',
+      '--maxConcurrency',
+      '4'
+    ]
   }
 ];
 

@@ -5,12 +5,33 @@ const suites = [
   {
     name: 'vitest ag-grid',
     command: 'npx',
-    args: ['vitest', 'run', 'tests/vitest/ag-grid.test.tsx']
+    args: [
+      'vitest',
+      'run',
+      'tests/vitest/ag-grid.test.tsx',
+      '--minWorkers',
+      '4',
+      '--maxWorkers',
+      '4',
+      '--maxConcurrency',
+      '4'
+    ]
   },
   {
     name: 'rstest ag-grid',
     command: 'npm',
-    args: ['run', 'test:rstest', '--', '--testNamePattern', 'SalesGrid', '--testEnvironment', 'jsdom', '--globals']
+    args: [
+      'run',
+      'test:rstest',
+      '--',
+      '--testNamePattern',
+      'SalesGrid',
+      '--testEnvironment',
+      'jsdom',
+      '--globals',
+      '--maxConcurrency',
+      '4'
+    ]
   }
 ];
 

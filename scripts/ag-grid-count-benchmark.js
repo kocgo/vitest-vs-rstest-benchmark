@@ -65,6 +65,12 @@ describe('ag-grid synthetic load', () => {
       '--reporter',
       'basic',
       '--silent',
+      '--minWorkers',
+      '4',
+      '--maxWorkers',
+      '4',
+      '--maxConcurrency',
+      '4',
       file
     ]
   },
@@ -129,6 +135,8 @@ describe('ag-grid synthetic load', () => {
       '--testEnvironment',
       'jsdom',
       '--globals',
+      '--maxConcurrency',
+      '4',
       '--hideSkippedTests'
     ]
   }
