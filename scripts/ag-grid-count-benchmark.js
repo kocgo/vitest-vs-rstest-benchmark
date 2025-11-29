@@ -3,7 +3,7 @@ import { join, relative } from 'node:path';
 import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 
-const testCounts = [100, 1_000, 10_000];
+const testCounts = [100, 1_000, 10_000, 100_000];
 
 const runners = [
   {

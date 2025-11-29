@@ -53,9 +53,10 @@ All benchmark results now live in this README. Populate the runtime column as ne
 | vitest | jsdom | react component | 100 | 5 | — |
 | vitest | jsdom | react component | 1000 | 5 | — |
 | vitest | jsdom | react component | 10000 | 5 | — |
-| vitest | jsdom | ag-grid | 100 | 5 | — |
-| vitest | jsdom | ag-grid | 1000 | 5 | — |
-| vitest | jsdom | ag-grid | 10000 | 5 | — |
+| vitest | jsdom | ag-grid | 100 | 5 | 5.96 |
+| vitest | jsdom | ag-grid | 1000 | 5 | 3.46 |
+| vitest | jsdom | ag-grid | 10000 | 5 | 7.16 |
+| vitest | jsdom | ag-grid | 100000 | 5 | 19.72 |
 | vitest | happydom | pure function | 100 | 5 | — |
 | vitest | happydom | pure function | 1000 | 5 | — |
 | vitest | happydom | pure function | 10000 | 5 | — |
@@ -80,9 +81,10 @@ All benchmark results now live in this README. Populate the runtime column as ne
 | rstest | jsdom | react component | 100 | 5 | — |
 | rstest | jsdom | react component | 1000 | 5 | — |
 | rstest | jsdom | react component | 10000 | 5 | — |
-| rstest | jsdom | ag-grid | 100 | 5 | — |
-| rstest | jsdom | ag-grid | 1000 | 5 | — |
-| rstest | jsdom | ag-grid | 10000 | 5 | — |
+| rstest | jsdom | ag-grid | 100 | 5 | 6.01 |
+| rstest | jsdom | ag-grid | 1000 | 5 | 5.85 |
+| rstest | jsdom | ag-grid | 10000 | 5 | 11.69 |
+| rstest | jsdom | ag-grid | 100000 | 5 | 411.05 |
 | rstest | happydom | pure function | 100 | 5 | — |
 | rstest | happydom | pure function | 1000 | 5 | — |
 | rstest | happydom | pure function | 10000 | 5 | — |
