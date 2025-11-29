@@ -36,3 +36,34 @@ This repository provides a tiny React component surface area and two parallel te
 - `vitest.config.ts`, `vitest.setup.ts`: Vitest configuration.
 - `rstest.config.ts`, `rstest.setup.ts`: RSTest configuration tuned for React Testing Library.
 - `scripts/benchmark.js`: sequential runner that reports elapsed time for each suite.
+
+## Latest benchmark results
+
+Synthetic suite (`npm run bench:matrix`):
+
+| Runner | Environment | Test count | Total runtime (s) |
+| --- | --- | --- | --- |
+| Vitest | jsdom | 100 | 5.57 |
+| Vitest | jsdom | 1,000 | 6.10 |
+| Vitest | jsdom | 10,000 | 29.67 |
+| Vitest | node | 100 | 4.41 |
+| Vitest | node | 1,000 | 5.27 |
+| Vitest | node | 10,000 | 30.21 |
+| Rstest | jsdom | 100 | 4.59 |
+| Rstest | jsdom | 1,000 | 5.27 |
+| Rstest | jsdom | 10,000 | 10.34 |
+| Rstest | node | 100 | 2.53 |
+| Rstest | node | 1,000 | 3.30 |
+| Rstest | node | 10,000 | 8.94 |
+
+ag-Grid suite:
+
+- `npm run bench:ag-grid` (jsdom): Vitest **10.40s**, Rstest **10.35s**
+- `npm run bench:ag-grid-dom`: jsdom — Vitest **10.34s**, Rstest **9.91s**; happy-dom — Vitest **9.59s**, Rstest **9.19s**
+
+Count-focused ag-Grid run (`npm run bench:ag-grid-count`):
+
+| Runner | 100 tests (s) | 1,000 tests (s) | 10,000 tests (s) |
+| --- | --- | --- | --- |
+| Vitest | 7.85 | 8.30 | 11.12 |
+| Rstest | 12.33 | 12.88 | 17.44 |

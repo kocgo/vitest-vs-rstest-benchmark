@@ -64,8 +64,7 @@ export function SalesGrid({
         ensureDomOrder
         domLayout="autoHeight"
         suppressRowVirtualisation={suppressRowVirtualisation}
-        rowSelection="multiple"
-        rowMultiSelectWithClick
+        rowSelection={{ mode: 'multiRow', enableSelectionWithoutKeys: true, enableClickSelection: true }}
         quickFilterText={quickFilterText}
         onGridReady={(event) => onGridReady?.(event.api)}
         onSelectionChanged={(event) => onSelectionChange?.(event.api.getSelectedRows() as SaleRecord[])}
