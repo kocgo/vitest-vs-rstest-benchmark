@@ -3,6 +3,8 @@ import { join, relative } from 'node:path';
 import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 
+import { updateBenchmarkResultsInReadme } from './update-readme-table.js';
+
 const selectedCounts = process.env.AG_GRID_COUNTS
   ? process.env.AG_GRID_COUNTS.split(',').map((value) => Number.parseInt(value, 10))
   : undefined;
@@ -14,12 +16,18 @@ const testCounts = selectedCounts?.filter((count) => Number.isFinite(count) && c
   100_000
 ];
 
-const testEnvironment = process.env.AG_GRID_ENV ?? 'jsdom';
-const batchSize = Number.isFinite(Number(process.env.AG_GRID_BATCH_SIZE))
-  ? Math.max(1, Number.parseInt(process.env.AG_GRID_BATCH_SIZE, 10))
-  : 1;
+const testEnvironment = (process.env.AG_GRID_ENV ?? 'jsdom') as 'jsdom' | 'happy-dom' | 'node';
+const batchSizeEnv = process.env.AG_GRID_BATCH_SIZE;
+const parsedBatchSize = Number.parseInt(batchSizeEnv ?? '', 10);
+const batchSize = Number.isFinite(parsedBatchSize) ? Math.max(1, parsedBatchSize) : 1;
 
-const runners = [
+type Runner = {
+  name: 'vitest' | 'rstest';
+  buildContent: (count: number) => string;
+  commandArgs: (file: string) => string[];
+};
+
+const runners: Runner[] = [
   {
     name: 'vitest',
     buildContent: (count) => `import { describe, it, expect, beforeAll, afterAll } from "vitest";
@@ -168,23 +176,23 @@ describe('ag-grid synthetic load', () => {
   }
 ];
 
-function createTempDir() {
+function createTempDir(): string {
   return mkdtempSync(join(process.cwd(), 'tests', 'rstest', 'tmp-ag-grid-count-'));
 }
 
-function createTestFile(dir, runner, count) {
+function createTestFile(dir: string, runner: Runner, count: number): string {
   const filePath = join(dir, `${runner.name}.ag-grid.count.test.tsx`);
   writeFileSync(filePath, runner.buildContent(count), 'utf8');
   return filePath;
 }
 
-async function runCommand(command, args, cwd) {
+async function runCommand(command: string, args: string[], cwd: string): Promise<number> {
   const start = performance.now();
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, { stdio: 'inherit', cwd, shell: false });
     child.on('close', (code) => {
       if (code === 0) {
-        resolve(null);
+        resolve();
       } else {
         reject(new Error(`${command} exited with code ${code}`));
       }
@@ -193,9 +201,16 @@ async function runCommand(command, args, cwd) {
   return performance.now() - start;
 }
 
-async function runBenchmarks() {
+type BenchmarkResult = {
+  runner: Runner['name'];
+  environment: typeof testEnvironment;
+  count: number;
+  durationMs: number;
+};
+
+async function runBenchmarks(): Promise<BenchmarkResult[]> {
   const tempDir = createTempDir();
-  const results = [];
+  const results: BenchmarkResult[] = [];
 
   try {
     for (const runner of runners) {
@@ -215,14 +230,31 @@ async function runBenchmarks() {
   return results;
 }
 
-function printSummary(results) {
+function printSummary(results: BenchmarkResult[]): void {
   console.log('\nSummary (ms):');
   for (const row of results.sort((a, b) => a.count - b.count || a.runner.localeCompare(b.runner))) {
     console.log(`${row.runner} | ${row.environment} | ${row.count} tests -> ${row.durationMs.toFixed(1)}ms`);
   }
 }
 
-runBenchmarks().then(printSummary).catch((error) => {
-  console.error('Benchmark failed:', error);
-  process.exitCode = 1;
-});
+function updateReadme(results: BenchmarkResult[]): void {
+  const updates = results.map((row) => ({
+    framework: row.runner,
+    environment: row.environment,
+    subject: 'ag-grid',
+    testCount: row.count,
+    runtimeSeconds: row.durationMs / 1000
+  }));
+
+  updateBenchmarkResultsInReadme(updates);
+}
+
+runBenchmarks()
+  .then((results) => {
+    updateReadme(results);
+    printSummary(results);
+  })
+  .catch((error) => {
+    console.error('Benchmark failed:', error);
+    process.exitCode = 1;
+  });

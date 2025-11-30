@@ -6,7 +6,7 @@ This repository provides a tiny React component surface area and two parallel te
 - Shared React components in `src/components` used by both suites.
 - Vitest setup in `vitest.config.ts` with tests in `tests/vitest`.
 - RSTest setup in `rstest.config.ts` with tests in `tests/rstest`.
-- A `scripts/benchmark.js` helper that runs both suites sequentially and prints their wall-clock timings.
+- A `scripts/benchmark.ts` helper that runs both suites sequentially and prints their wall-clock timings.
 - A TypeScript benchmark catalog in `benchmarks/` that enumerates every combination of runner, environment, subject, and test count.
 
 ## Getting started
@@ -46,7 +46,7 @@ This repository provides a tiny React component surface area and two parallel te
 - `tests/rstest/*`: RSTest specs using the Rspack runner.
 - `vitest.config.ts`, `vitest.setup.ts`: Vitest configuration.
 - `rstest.config.ts`, `rstest.setup.ts`: RSTest configuration tuned for React Testing Library.
-- `scripts/benchmark.js`: sequential runner that reports elapsed time for each suite.
+- `scripts/benchmark.ts`: sequential runner that reports elapsed time for each suite.
 - `benchmarks/`: matrix of benchmark case definitions and a central `benchmarkCases` export.
 
 ## Benchmark case catalog
