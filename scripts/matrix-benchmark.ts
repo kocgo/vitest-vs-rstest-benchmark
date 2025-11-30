@@ -3,10 +3,19 @@ import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 
-const testCounts = [100, 1000, 10000];
-const environments = ['jsdom', 'happy-dom', 'node'];
+import { updateBenchmarkResultsInReadme } from './update-readme-table.js';
 
-const runners = [
+const testCounts = [100, 1000, 10000] as const;
+const environments = ['jsdom', 'happy-dom', 'node'] as const;
+
+type Environment = (typeof environments)[number];
+type MatrixRunner = {
+  name: 'vitest' | 'rstest';
+  buildContent: (count: number) => string;
+  commandArgs: (env: Environment, file: string) => string[];
+};
+
+const runners: MatrixRunner[] = [
   {
     name: 'vitest',
     buildContent: (count) => `import { describe, it, expect } from "vitest";
@@ -63,23 +72,23 @@ describe('synthetic rstest suite', () => {
   }
 ];
 
-function createTempDir() {
+function createTempDir(): string {
   return mkdtempSync(join(process.cwd(), 'tmp-bench-'));
 }
 
-function createTestFile(dir, runner, count) {
+function createTestFile(dir: string, runner: MatrixRunner, count: number): string {
   const filePath = join(dir, `${runner.name}.synthetic.test.ts`);
   writeFileSync(filePath, runner.buildContent(count), 'utf8');
   return filePath;
 }
 
-async function runCommand(command, args, cwd) {
+async function runCommand(command: string, args: string[], cwd: string): Promise<number> {
   const start = performance.now();
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, { stdio: 'inherit', cwd, shell: false });
     child.on('close', (code) => {
       if (code === 0) {
-        resolve(null);
+        resolve();
       } else {
         reject(new Error(`${command} exited with code ${code}`));
       }
@@ -88,9 +97,16 @@ async function runCommand(command, args, cwd) {
   return performance.now() - start;
 }
 
-async function runMatrix() {
+type BenchmarkResult = {
+  runner: MatrixRunner['name'];
+  environment: Environment;
+  count: number;
+  durationMs: number;
+};
+
+async function runMatrix(): Promise<BenchmarkResult[]> {
   const tempDir = createTempDir();
-  const results = [];
+  const results: BenchmarkResult[] = [];
 
   try {
     for (const environment of environments) {
@@ -111,7 +127,7 @@ async function runMatrix() {
   return results;
 }
 
-function formatResults(results) {
+function formatResults(results: BenchmarkResult[]): void {
   const sorted = results.sort((a, b) => a.count - b.count || a.runner.localeCompare(b.runner));
   console.log('\nSummary (ms):');
   for (const row of sorted) {
@@ -119,7 +135,24 @@ function formatResults(results) {
   }
 }
 
-runMatrix().then(formatResults).catch((error) => {
+function updateReadme(results: BenchmarkResult[]): void {
+  const updates = results.map((row) => ({
+    framework: row.runner,
+    environment: row.environment,
+    subject: 'pure-function',
+    testCount: row.count,
+    runtimeSeconds: row.durationMs / 1000
+  }));
+
+  updateBenchmarkResultsInReadme(updates);
+}
+
+runMatrix()
+  .then((results) => {
+    updateReadme(results);
+    formatResults(results);
+  })
+  .catch((error) => {
   console.error('Benchmark failed:', error);
   process.exitCode = 1;
 });

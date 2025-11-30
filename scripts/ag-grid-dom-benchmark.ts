@@ -1,14 +1,29 @@
 import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 
-const suites = [
+const environments = ['jsdom', 'happy-dom'] as const;
+
+type Environment = (typeof environments)[number];
+type Suite = {
+  name: string;
+  environment: Environment;
+  runner: 'vitest' | 'rstest';
+  command: string;
+  args: string[];
+};
+
+const suites: Suite[] = environments.flatMap((environment) => [
   {
-    name: 'vitest ag-grid',
+    name: `vitest (${environment})`,
+    environment,
+    runner: 'vitest',
     command: 'npx',
     args: [
       'vitest',
       'run',
       'tests/vitest/ag-grid.test.tsx',
+      '--environment',
+      environment,
       '--minWorkers',
       '4',
       '--maxWorkers',
@@ -18,23 +33,27 @@ const suites = [
     ]
   },
   {
-    name: 'rstest ag-grid',
+    name: `rstest (${environment})`,
+    environment,
+    runner: 'rstest',
     command: 'npx',
     args: [
       'rstest',
       'run',
       '-c',
-      'rstest.ag-grid.config.ts',
+      'rstest.config.ts',
+      '--include',
+      'tests/rstest/ag-grid.test.tsx',
       '--testEnvironment',
-      'jsdom',
+      environment,
       '--globals',
       '--maxConcurrency',
       '4'
     ]
   }
-];
+]);
 
-async function runSuite({ name, command, args }) {
+async function runSuite({ name, command, args }: Suite): Promise<number> {
   const start = performance.now();
   await new Promise((resolve, reject) => {
     const child = spawn(command, args, { stdio: 'inherit', shell: false });
@@ -50,15 +69,24 @@ async function runSuite({ name, command, args }) {
 }
 
 async function main() {
+  const results: Array<Suite & { duration: number }> = [];
+
   for (const suite of suites) {
     try {
       const duration = await runSuite(suite);
+      results.push({ ...suite, duration });
       console.log(`\n${suite.name} finished in ${(duration / 1000).toFixed(2)}s`);
     } catch (error) {
-      console.error(`\n${suite.name} failed:`, error.message);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`\n${suite.name} failed:`, message);
       process.exitCode = 1;
-      break;
+      return;
     }
+  }
+
+  console.log('\nSummary (ms):');
+  for (const { runner, environment, duration } of results) {
+    console.log(`${runner} | ${environment} -> ${duration.toFixed(1)}ms`);
   }
 }
 

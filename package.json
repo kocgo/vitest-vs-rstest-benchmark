@@ -7,12 +7,12 @@
   "scripts": {
     "test:vitest": "vitest run",
     "test:rstest": "rstest run -c rstest.config.ts",
-    "bench": "node scripts/benchmark.js",
+    "bench": "tsx scripts/benchmark.ts",
     "bench:readme": "npm run bench:matrix",
-    "bench:ag-grid": "node scripts/ag-grid-benchmark.js",
-    "bench:ag-grid-dom": "node scripts/ag-grid-dom-benchmark.js",
-    "bench:ag-grid-count": "node scripts/ag-grid-count-benchmark.js",
-    "bench:matrix": "node scripts/matrix-benchmark.js",
+    "bench:ag-grid": "tsx scripts/ag-grid-benchmark.ts",
+    "bench:ag-grid-dom": "tsx scripts/ag-grid-dom-benchmark.ts",
+    "bench:ag-grid-count": "tsx scripts/ag-grid-count-benchmark.ts",
+    "bench:matrix": "tsx scripts/matrix-benchmark.ts",
     "test": "npm run test:vitest && npm run test:rstest"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "@vitejs/plugin-react": "5.1.1",
     "happy-dom": "^20.0.11",
     "jsdom": "25.0.1",
+    "tsx": "^4.20.6",
     "typescript": "5.6.3",
     "vite": "5.4.9",
     "vitest": "2.1.4"
